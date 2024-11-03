@@ -24,6 +24,10 @@ func main() {
 		w.Write([]byte(fmt.Sprintf("Accessing API version %s", strconv.Itoa(nid))))
 	})
 
+	router.HandleFunc(("GET /healthcheck"), func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("API is up and running"))
+	})
+
 	server := http.Server{
 		Addr:    ":8080",
 		Handler: router,

@@ -62,3 +62,23 @@ func TestGetNoteByID(t *testing.T) {
 		t.Errorf("handler returned unexpected body: got %v want %v", rr.Body.String(), expected)
 	}
 }
+
+func TestHealthCheck(t *testing.T) {
+	router := http.NewServeMux()
+
+	router.HandleFunc("GET /healthcheck", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("API is up and running"))
+	})
+
+	req, err := http.NewRequest("GET", "/healthcheck", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rr := httptest.NewRecorder()
+	router.ServeHTTP(rr, req)
+
+	if status := rr.Code; status != http.StatusOK {
+		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+	}
+}
